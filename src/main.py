@@ -1,8 +1,6 @@
 from fastapi import FastAPI
+from .routes import transactions
 
 app = FastAPI(title="Currency Converter API")
 
-
-@app.get("/")
-def root():
-    return {"message": "API funcionando"}
+app.include_router(transactions.router)
