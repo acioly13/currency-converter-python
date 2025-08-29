@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
-import httpx
 import os
+import currencyapicom
 
 from ..db import get_session
 from ..models.transaction import Transaction
@@ -12,26 +12,44 @@ from ..schemas.transaction import TransactionCreate, TransactionRead
 router = APIRouter()
 
 CURRENCY_API_KEY = os.getenv("CURRENCY_API_KEY")
+client = currencyapicom.Client(CURRENCY_API_KEY)
 
 
 @router.post("/convert", response_model=TransactionRead)
 async def convert(transaction: TransactionCreate, session: AsyncSession = Depends(get_session)):
-    url = f"https://api.currencyapi.com/v3/latest?apikey={CURRENCY_API_KEY}&currencies={transaction.to_currency}&base_currency={transaction.from_currency}"
+    print("➡️ /convert called")
+    print("Input transaction:", transaction.dict())
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        if response.status_code != 200:
-            raise HTTPException(status_code=500, detail="Currency API error")
-        data = response.json()
-        rate = data["data"][transaction.to_currency]["value"]
+    try:
+        print(f"Fetching rate for {transaction.from_currency} -> {transaction.to_currency}")
+        result = client.latest(transaction.from_currency, currencies=[transaction.to_currency])
+        print("Currency API result:", result)
 
-    transaction.to_value = transaction.from_value * rate
-    transaction.rate = rate
+        rate = result["data"][transaction.to_currency]["value"]
+        print("Rate obtained:", rate)
 
-    db_transaction = Transaction(**transaction.dict())
+    except Exception as e:
+        print("❌ Currency API error:", str(e))
+        raise HTTPException(status_code=500, detail=f"Currency API error: {str(e)}")
+
+    from_value = transaction.amount
+    to_value = transaction.amount * rate
+    print(f"Converting {from_value} {transaction.from_currency} -> {to_value} {transaction.to_currency}")
+
+    db_transaction = Transaction(
+        user_id=transaction.user_id,
+        from_currency=transaction.from_currency,
+        to_currency=transaction.to_currency,
+        from_value=from_value,
+        to_value=to_value,
+        rate=rate
+    )
+
     session.add(db_transaction)
     await session.commit()
     await session.refresh(db_transaction)
+
+    print("✅ Transaction saved:", db_transaction.__dict__)
     return db_transaction
 
 
