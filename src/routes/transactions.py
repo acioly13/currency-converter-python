@@ -18,7 +18,7 @@ client = currencyapicom.Client(CURRENCY_API_KEY)
 @router.post("/convert", response_model=TransactionRead)
 async def convert(transaction: TransactionCreate, session: AsyncSession = Depends(get_session)):
     print("➡️ /convert called")
-    print("Input transaction:", transaction.dict())
+    print("Input transaction:", transaction.model_dump())
 
     try:
         print(f"Fetching rate for {transaction.from_currency} -> {transaction.to_currency}")
