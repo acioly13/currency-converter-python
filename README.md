@@ -1,130 +1,190 @@
-# 🧪 Desafio Técnico - Backend Python (FastAPI)
+# 💱 Currency Converter App
 
-## 💸 Conversor de Moedas
-
-Você deverá implementar uma aplicação que permita a conversão de valores entre moedas, utilizando **Python com FastAPI** no backend. O frontend pode ser opcionalmente implementado em Vue.js ou React.
-
-> **Importante:** Caso você não tenha experiência com frontend, a entrega pode ser feita exclusivamente com a API.
+Full-stack application for currency conversion with transaction history.  
+Developed with **FastAPI (Python)**, **React (TypeScript)** and **PostgreSQL**, fully containerized with **Docker Compose**.
 
 ---
 
-## 📆 Requisitos do Projeto
+## 📋 Requirements
 
-### ✅ Funcionalidades Principais
-- A API deve permitir a conversão entre pelo menos 4 moedas:
-  - BRL (Real)
-  - USD (Dólar Americano)
-  - EUR (Euro)
-  - JPY (Iene)
+To run this project you need to have installed:
 
-- As taxas de câmbio devem ser obtidas da API:
-  - https://app.currencyapi.com/
-  - Documentação: https://currencyapi.com/docs
+- [Docker](https://docs.docker.com/get-docker/)  
+- [Docker Compose](https://docs.docker.com/compose/install/)  
 
-### 🔐 Persistência das Transações
-Cada transação realizada deve ser registrada com as seguintes informações:
-- ID do usuário
-- Moeda de origem e destino
-- Valor de origem
-- Valor convertido
-- Taxa de conversão
-- Data/Hora UTC
+Check if installed correctly:
 
-### 🔍 Endpoint de Consulta
-- `GET /transactions?userId=123`
-
-#### Exemplo de retorno:
-```json
-{
-  "transactionId": 42,
-  "userId": 123,
-  "fromCurrency": "USD",
-  "toCurrency": "BRL",
-  "fromValue": 100,
-  "toValue": 525.32,
-  "rate": 5.2532,
-  "timestamp": "2024-05-19T18:00:00Z"
-}
+```bash
+  docker --version
+  docker-compose --version
 ```
 
-### ❌ Casos de Erro
-Deverão retornar:
-- Código HTTP apropriado
-- Mensagem de erro clara e objetiva
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone the repository
+
+```bash
+  git clone https://github.com/acioly13/currency-converter-python
+  cd currency-converter-python
+```
 
 ---
 
-## 🧪 Testes
-- A aplicação deve conter testes unitários e de integração com `pytest`
+### 2️⃣ Create `.env` file
+
+Inside the project root, create a `.env` file with the following content:
+
+```env
+# Database
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin123
+POSTGRES_DB=currency_db
+DATABASE_URL=postgresql+asyncpg://admin:admin123@db:5432/currency_db
+
+# Currency API
+CURRENCY_API_KEY=YOUR_API_KEY_HERE
+```
+
+⚠️ Replace `YOUR_API_KEY_HERE` with your [CurrencyAPI](https://currencyapi.com/) token.  
+Without this, currency conversion will not work.
 
 ---
 
-## 📄 README.md
-Deve conter:
-- Instruções para executar o projeto
-- Explicação do propósito
-- Principais decisões de arquitetura
-- Organização das camadas (ex: routers, services, repositories, models)
-- O conteúdo deve estar todo em inglês
+### 3️⃣ Build and start the application
+
+Run the command:
+
+```bash
+  docker-compose up --build
+```
+
+This will start 3 services:
+- **Backend (FastAPI)** → [http://localhost:8000](http://localhost:8000)  
+- **Frontend (React)** → [http://localhost:5173](http://localhost:5173)  
+- **Database (PostgreSQL)** → [localhost:5432](localhost:5432)  
 
 ---
 
-## 🧰 Itens Desejáveis (Diferenciais)
-- Logs estruturados (ex: `loguru`, `structlog`)
-- Tratamento de exceções com middlewares
-- Documentação automática (Swagger já embutido no FastAPI)
-- Linter (ex: `ruff`, `black`, `flake8`)
-- Deploy funcional (ex: Render, Railway, Fly.io)
-- CI/CD com GitHub Actions
+## 📌 API Documentation
 
-### Frontend (opcional)
-- Vue.js 3 + TypeScript ou React + TypeScript
-- TailwindCSS
-- Axios
-- Testes com Cypress, RTL ou Vitest
+After starting the project, access the **interactive Swagger docs**:
+
+👉 [http://localhost:8000/docs](http://localhost:8000/docs)
+
+Main endpoints:
+- `POST /convert` → Convert currency and store transaction  
+- `GET /transactions?userId={id}` → List all transactions for a user  
 
 ---
 
-## 🚀 Tecnologias Esperadas
+## 🖥️ Frontend
 
-### Backend
-- Python 3.10+
-- FastAPI
-- SQLAlchemy 2.x ou Tortoise ORM
-- PostgreSQL ou SQLite
-- Pytest
+The frontend provides:
+- Currency conversion form  
+- History of transactions per user  
 
----
-
-## ⭐ Perfil Desejado
-- Boas práticas REST
-- Arquitetura limpa e escalável
-- Conhecimentos em AWS são diferenciais
-- Experiência com CI/CD
-- Boa comunicação e clareza de código
+👉 Access at [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 📋 Entrega
+## 🛠️ Tech Stack
 
-Para padronizar a entrega e facilitar a análise:
-
-1. Faça um **fork deste repositório** para sua conta pessoal do GitHub.
-2. Crie uma **branch com seu nome em snake_case** (exemplo: `joao_silva_souza`).
-3. Suba sua solução utilizando **commits organizados e descritivos**.
-4. Após finalizar:
-   - Certifique-se de que o repositório esteja **público**
-   - Envie o link do seu fork para nossa equipe com:
-     - **Título:** `Entrega - joao_silva_souza`
-     - **Descrição:** Nome completo, data da entrega e quaisquer observações que julgar relevantes.
-
-> ✅ **Dica**: Você pode incluir um arquivo `THOUGHTS.md` com decisões técnicas, ideias descartadas e sugestões de melhoria.
+- **Backend:** FastAPI, SQLAlchemy (async), PostgreSQL, Loguru, Pytest  
+- **Frontend:** React, Vite, TypeScript, Axios, TailwindCSS  
+- **Database:** PostgreSQL 15  
+- **Containerization:** Docker, Docker Compose  
 
 ---
 
-## 📢 Considerações Finais
-- Cite alternativas gratuitas caso use serviços pagos
-- Clareza, boas práticas e organização serão avaliadas
-- Pode adicionar um `THOUGHTS.md` com decisões técnicas e observações
+## 🧪 Running Tests
 
-Boa sorte! 🚀
+Run backend tests inside the container:
+
+```bash
+  docker exec -it currency_backend pytest
+```
+
+---
+
+## 🧹 Useful Commands
+
+Stop all services:
+
+```bash
+  docker-compose down
+```
+
+Rebuild containers:
+
+```bash
+  docker-compose up --build --force-recreate
+```
+
+---
+
+## 🏗️ Architecture Decisions
+
+- **Separation of concerns**: The project is divided into `backend` (FastAPI), `frontend` (React), and `db` (Postgres) services.
+- **Containerization**: Everything runs through Docker Compose to simplify setup.
+- **Async Backend**: The backend uses `FastAPI + SQLAlchemy Async` to handle concurrency efficiently.
+- **External API integration**: Currency conversion rates are retrieved from [CurrencyAPI](https://currencyapi.com/).
+- **Logging**: Centralized logging with **Loguru** for better debugging and error tracing.
+- **Validation layer**: Pydantic models ensure request and response validation.
+
+---
+
+## 📂 Layered Organization
+
+### Backend (`/backend/src`)
+
+- **`main.py`** → FastAPI entrypoint, app setup (CORS, routes, lifespan).  
+- **`db.py`** → Database configuration with SQLAlchemy Async.  
+- **`init_db.py`** → Database initialization script.  
+- **`logger.py`** → Logging configuration with Loguru.  
+- **`models/`** → ORM models (e.g., `Transaction`).  
+- **`schemas/`** → Pydantic schemas for request/response validation.  
+- **`routes/`** → API routers (`transactions.py`).  
+- **`tests/`** → Pytest test cases for endpoints.  
+
+➡️ This structure separates **routers (controllers)**, **schemas (DTOs)**, and **models (database entities)** clearly.
+
+### Frontend (`/frontend/src`)
+
+- **`App.tsx`** → Main component with currency converter form.  
+- **`components/TransactionList.tsx`** → Transaction history display.  
+- **`services/api.ts`** → Axios client for backend communication.  
+- **`index.css`** → Global styles.  
+- **`main.tsx`** → React app entrypoint.  
+
+➡️ The frontend is organized into **components**, **services**, and **styles** for maintainability.
+
+---
+
+## 🗂️ Architecture Diagram
+
+```mermaid
+graph TD
+    A[Frontend - React] -->|API Calls| B[Backend - FastAPI]
+    B -->|SQLAlchemy Async| C[(PostgreSQL Database)]
+    B -->|External API Request| D[CurrencyAPI Service]
+```
+
+---
+
+## 🎯 Purpose
+
+This project demonstrates the development of a **full-stack application** with:  
+- Clean architecture separation (frontend, backend, database).  
+- API-first backend with external API integration.  
+- A user-friendly frontend that consumes the API.  
+- Complete containerized environment to simplify setup for reviewers.  
+
+---
+
+## 👨‍💻 Author
+
+Developed by **João Pedro Acioly**  
+📧 john.acioly@gmail.com  
+🔗 [LinkedIn](https://www.linkedin.com/in/joaoacioly/) | [GitHub](https://github.com/acioly13)
