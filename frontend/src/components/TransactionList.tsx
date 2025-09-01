@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
-import { getTransactions } from "../services/api";
-import type { TransactionRead } from "../services/api";
-
+import {getTransactions} from "../services/api";
+import type {TransactionRead} from "../services/api";
 
 interface Props {
     userId: number;
@@ -25,14 +24,21 @@ const TransactionList: React.FC<Props> = ({userId}) => {
     return (
         <div>
             <h2>Transactions</h2>
-            <ul>
+            <div className="transactions-list">
                 {transactions.map((t) => (
-                    <li key={t.id}>
-                        {t.from_value} {t.from_currency} → {t.to_value} {t.to_currency} |
-                        Rate: {t.rate} | {new Date(t.timestamp).toLocaleString()}
-                    </li>
+                    <div key={t.id} className="transaction-card">
+                        <p>
+                            <strong>
+                                {t.from_value.toFixed(2)} {t.from_currency}
+                            </strong>{" "}
+                            → <strong>{t.to_value.toFixed(2)} {t.to_currency}</strong>
+                        </p>
+                        <p className="rate-date">
+                            Rate: {t.rate.toFixed(2)} | {new Date(t.timestamp).toLocaleString()}
+                        </p>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

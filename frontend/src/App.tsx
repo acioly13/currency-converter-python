@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import TransactionList from "./components/TransactionList";
-import { convertCurrency } from "./services/api";
-import type { TransactionCreate, TransactionRead } from "./services/api";
+import {convertCurrency} from "./services/api";
+import type {TransactionCreate, TransactionRead} from "./services/api";
 
 const App: React.FC = () => {
     const [userId] = useState(1);
@@ -15,7 +15,7 @@ const App: React.FC = () => {
             user_id: userId,
             from_currency: fromCurrency,
             to_currency: toCurrency,
-            amount
+            amount,
         };
         try {
             const data = await convertCurrency(payload);
@@ -26,28 +26,58 @@ const App: React.FC = () => {
     };
 
     return (
-        <div style={{padding: "20px"}}>
+        <div className="container">
             <h1>Currency Converter</h1>
 
-            <div>
-                <input type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))}/>
-                <input type="text" value={fromCurrency}
-                       onChange={(e) => setFromCurrency(e.target.value.toUpperCase())}/>
-                <input type="text" value={toCurrency} onChange={(e) => setToCurrency(e.target.value.toUpperCase())}/>
+            <div className="converter">
+                <label htmlFor="amount">Amount:</label>
+                <input
+                    id="amount"
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(Number(e.target.value))}
+                />
+
+                <label htmlFor="from">From:</label>
+                <select
+                    id="from"
+                    value={fromCurrency}
+                    onChange={(e) => setFromCurrency(e.target.value)}
+                >
+                    <option value="BRL">BRL - Brazilian Real</option>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                </select>
+
+                <label htmlFor="to">To:</label>
+                <select
+                    id="to"
+                    value={toCurrency}
+                    onChange={(e) => setToCurrency(e.target.value)}
+                >
+                    <option value="BRL">BRL - Brazilian Real</option>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                </select>
+
                 <button onClick={handleConvert}>Convert</button>
             </div>
 
             {result && (
-                <div>
-                    <h3>Result</h3>
+                <div className="result">
                     <p>
-                        {result.from_value} {result.from_currency} → {result.to_value} {result.to_currency} |
-                        Rate: {result.rate}
+                        {result.from_value.toFixed(2)} {result.from_currency} →{" "}
+                        {result.to_value.toFixed(2)} {result.to_currency}
                     </p>
+                    <p>Rate: {result.rate.toFixed(2)}</p>
                 </div>
             )}
 
-            <TransactionList userId={userId}/>
+            <div className="transactions">
+                <TransactionList userId={userId}/>
+            </div>
         </div>
     );
 };
