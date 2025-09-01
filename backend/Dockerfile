@@ -1,13 +1,17 @@
 FROM python:3.12-slim
 
-WORKDIR /app/backend
+WORKDIR /app
+
+
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
 
+COPY ./src ./src
 
-ENV PYTHONPATH=/app/backend
+ENV PYTHONPATH=/app
 
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

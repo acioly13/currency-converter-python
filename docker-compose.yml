@@ -1,19 +1,27 @@
-version: "3.9"
-
 services:
-  app:
-    build: ./backend
-    container_name: currency_app
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: currency_backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app/backend
     env_file:
       - .env
     depends_on:
       - db
-    stdin_open: true
-    tty: true
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: currency_frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    depends_on:
+      - backend
 
   db:
     image: postgres:15
@@ -27,7 +35,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
 
 volumes:
   postgres_data:
