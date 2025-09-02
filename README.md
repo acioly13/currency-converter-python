@@ -47,7 +47,7 @@ DATABASE_URL=postgresql+asyncpg://admin:admin123@db:5432/currency_db
 CURRENCY_API_KEY=YOUR_API_KEY_HERE
 ```
 
-⚠️ Replace `YOUR_API_KEY_HERE` with your [CurrencyAPI](https://currencyapi.com/) token.  
+⚠️ Replace `YOUR_API_KEY_HERE` with your [CurrencyAPI](https://app.currencyapi.com/) token.  
 Without this, currency conversion will not work.
 
 ---
